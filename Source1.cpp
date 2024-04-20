@@ -133,15 +133,14 @@ int main() {
 	// deciding attack by using RPS
 	Player player;
 	Com com;
-
-	player.set_rps();
-	com.set_rps();
 	int turn = 0; // 0: draw status, 1: player win status, -1: com win status 
 
 	// Decision game do-while loop
 	// player's attack == false && com's attack == false && draw
 	// repeat decision until one of players(player, com) being attack == true
 	do {
+		player.set_rps();
+		com.set_rps();
 		RockPaperScissor Decision(player, com);
 		turn = Decision.statusOfTurn();
 	} while (player.get_attack() == false && com.get_attack() == false && turn == 0);
@@ -149,6 +148,10 @@ int main() {
 	// after doone decision game
 	// starting main game
 	do {
+
+		player.set_rps();
+		com.set_rps();
+		
 		RockPaperScissor main(player, com);
 
 		// player's attack == true && com's attack == false && player's win status(1)
