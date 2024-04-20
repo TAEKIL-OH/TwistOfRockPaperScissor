@@ -69,6 +69,10 @@ public:
 	char get_rps() {
 		return rps;
 	}
+
+	bool get_win() {
+		return win;
+	}
 };
 
 // Player
@@ -142,28 +146,29 @@ int main() {
 
 	do {
 		RockPaperScissor main(player, com);
-	} while (true);
 
-	// player's attack == true && com's attack == false && draw
-	// return player's win
+		// player's attack == true && com's attack == false && draw
+		// return player's win
 
-	// player's attack == false && com's attack == true && draw
-	// return com's win
+		// player's attack == false && com's attack == true && draw
+		// return com's win
 
-	// player's attack == false && com's attack == true && player's win
-	// change player's attack == true && player's attack == false
+		// player's attack == false && com's attack == true && player's win
+		// change player's attack == true && player's attack == false
 
-	// player's attack == false && com's attack == true && com's win
-	// repeat main game
+		// player's attack == false && com's attack == true && com's win
+		// repeat main game
 
-	// player's attack == true && com's attack == false && player's win
-	// repeat main game
+		// player's attack == true && com's attack == false && player's win
+		// repeat main game
 
-	// player's attack == true && com's attack == false && com's win
-	// change player's attack == false && player's attack == win
+		// player's attack == true && com's attack == false && com's win
+		// change player's attack == false && player's attack == win
+	} while (player.get_win() == true || com.get_win() == true);
+	
+	// asking repeating
 
-
-		std::cout << "END" << std::endl;
+	std::cout << "END" << std::endl;
 
 	return 0;
 }
