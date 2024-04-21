@@ -1,5 +1,8 @@
 // Taekil Oh
 // MJP Algorithm
+// can I add a data structure that the com can predict the user's decision when the game is continuing?
+// the thing like "AI" and increasing the difficulty to win against com
+// showing the winning rate of the "com" when game is continuing 
 
 #include <iostream>
 #include <string>
