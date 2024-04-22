@@ -6,50 +6,9 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <map>
 
-class user;
-
-// R: Rock,  P: Paper, S: Scissor
-class RockPaperScissor {
-	// (Rock & Scissor) || (Scissor & Rock) -> Rock
-	// (Scissor & Paper) || (Scissor & Paper) -> Scissor
-	// (Paper & Rock) || (Rock & Paper) -> Paper
-	// Rock & Rock -> draw
-	// Scissor & Scissor -> draw
-	// Paper & Paper -> draw
-private:
-	char player;
-	char com;
-
-public:
-	RockPaperScissor(user player, user com) {
-		this->player = player.get_rps();
-		this->com = com.get_rps();
-	}
-
-	int statusOfTurn() {
-		if (player == com) {
-			std::cout << "player = com" << std::endl;
-			return 0;
-		}
-		else if ((player == 'R' && com == 'S') || (player == 'S' && com == 'R')) {
-			std::cout << "Rock crushes Scissors. Player Turn" << std::endl;
-			return 1;
-		}
-		else if ((player == 'S' && com == 'P') || (player == 'P' && com == 'S')) {
-			std::cout << "Scissors cut Paper. Player Turn" << std::endl;
-			return 1;
-		}
-		else if ((player == 'P' && com == 'R') || (player == 'R' && com == 'P')) {
-			std::cout << "Paper covers Rock. Player Turn" << std::endl;
-			return 1;
-		}
-		else {
-			std::cout << "Com Turn" << std::endl;
-			return -1;
-		}
-	}
-};
 
 class user {
 
@@ -83,7 +42,7 @@ public:
 };
 
 // Player
-class Player: public user {
+class Player : public user {
 private:
 public:
 	void set_rps() {
@@ -104,8 +63,11 @@ public:
 };
 
 // Com
-class Com: public user {
+class Com : public user {
 private:
+	// adding AI like to learn the user's pattern
+	std::vector<char> userInputs;
+
 	char randomSelect() {
 		// Generate a random choice for the computer
 		srand(time(0)); // Seed for random number generation
@@ -120,34 +82,134 @@ private:
 			return 'S'; // Scissors
 		}
 	}
+
+	char analyzeUser() {
+		// adding analysis things
+		std::map<char, int> userCount;
+		for (char input : userInputs) {
+			userCount[input]++;
+		}
+
+		// advanced decision required. 
+		// for example find the frequence
+
+		// apply decision in here
+		return '0';
+	}
+
+
+
 public:
 	void set_rps() {
 		rps = randomSelect();
+		// print com for check
+		std::cout << "Com's Choice in com class: "<< rps << std::endl;
 	}
 
+	void recodeUserInput(char user) {
+		userInputs.push_back(user);
+	}
+
+};
+
+// R: Rock,  P: Paper, S: Scissor
+class RockPaperScissor {
+	// (Rock & Scissor) || (Scissor & Rock) -> Rock
+	// (Scissor & Paper) || (Scissor & Paper) -> Scissor
+	// (Paper & Rock) || (Rock & Paper) -> Paper
+	// Rock & Rock -> draw
+	// Scissor & Scissor -> draw
+	// Paper & Paper -> draw
+private:
+	char player;
+	char com;
+
+public:
+	RockPaperScissor(user player, user com) {
+		this->player = player.get_rps();
+		this->com = com.get_rps();
+	}
+
+	int statusOfTurn() {
+		if (player == com) {
+			std::cout << "player = com" << std::endl;
+			return 0;
+		}
+		else if (player == 'R' && com == 'S') {
+			std::cout << "Player Rock crushes Com Scissors. Player Turn" << std::endl;
+			return 1;
+		}
+		else if (player == 'S' && com == 'R') {
+			std::cout << "Com Rock crushes Player Scissors. Com Turn" << std::endl;
+			return -1;
+		}
+		else if (player == 'S' && com == 'P') {
+			std::cout << "Player Scissors cut Com Paper. Player Turn" << std::endl;
+			return 1;
+		}
+		else if (player == 'P' && com == 'S') {
+			std::cout << "Com Scissors cut Player Paper. Com Turn" << std::endl;
+			return -1;
+		}
+		else if (player == 'P' && com == 'R') {
+			std::cout << "Player Paper covers Com Rock. Player Turn" << std::endl;
+			return 1;
+		}
+		else if (player == 'R' && com == 'P') {
+			std::cout << "Com Paper covers Player Rock. Com Turn" << std::endl;
+			return -1;
+		}
+	}
 };
 
 int main() {
 	std::cout << "START" << std::endl;
 
-	// attacking Turn
-	std::cout << "Attacking Turn" << std::endl;
-	// both User attack  are false
+		// both User attack  are false
 	// deciding attack by using RPS
 	Player player;
 	Com com;
 	int turn = 0; // 0: draw status, 1: player win status, -1: com win status 
+	std::cout << "-------------------------------" << std::endl; // seperation line
+	// attacking Turn
+	std::cout << "Attacking Turn Decision" << std::endl;
 
 	// Decision game do-while loop
 	// player's attack == false && com's attack == false && draw
 	// repeat decision until one of players(player, com) being attack == true
 	do {
+		
 		player.set_rps();
 		com.set_rps();
+
+		// operation check point
+		std::cout << "player's chioce print in main: " << player.get_rps() << std::endl;
+		std::cout << "com's chioce print in main: " << com.get_rps() << std::endl;
+
 		RockPaperScissor Decision(player, com);
 		turn = Decision.statusOfTurn();
+		
+		std::cout << "turn in Decision: " << turn << std::endl;
+
+		// set attack
+		if (turn == 1) {
+			player.set_attack(true);
+			com.set_attack(false);
+		}
+		else if (turn == -1) {
+			player.set_attack(false);
+			player.set_attack(true);
+		}
+		else {
+			player.set_attack(false);
+			com.set_attack(false);
+		}
+
 	} while (player.get_attack() == false && com.get_attack() == false && turn == 0);
 
+	std::cout << "End of first Decision: " << turn << std::endl;
+	std::cout << "-------------------------------" << std::endl; // seperation line
+	std::cout << "Starting MJP Game: " << turn << std::endl;
 	// after doone decision game
 	// starting main game
 	do {
@@ -157,60 +219,65 @@ int main() {
 		
 		RockPaperScissor main(player, com);
 
+		int status = main.statusOfTurn();
+
 		// player's attack == true && com's attack == false && player's win status(1)
 		// repeat main game
-		if (player.get_attack() == true && main.statusOfTurn() == 1)
+		if (player.get_attack() == true && status == 1)
 		{
 			std::cout << "There is no winner, player attack again" << std::endl;
-			continue;
 		}
-
 		// player's attack == false && com's attack == true && com's win status(-1)
 		// repeat main game
-		if (com.get_attack() == true && main.statusOfTurn() == -1)
+		else if (com.get_attack() == true && status == -1)
 		{
 			std::cout << "There is no winner, com attack again" << std::endl;
-			continue;
 		}
-
 		// player's attack == true && com's attack == false && draw(0)
 		// return player's win
-		if (player.get_attack() == true && main.statusOfTurn() == 0)
+		else if (player.get_attack() == true && status == 0)
 		{
 			std::cout << "Player catches Com, Player's win" << std::endl;
 			player.set_win(true);
 		}
-			
 		// player's attack == false && com's attack == true && draw
 		// return com's win
-		if (com.get_attack() == true && main.statusOfTurn() == 0)
+		else if (com.get_attack() == true && status == 0)
 		{
 			std::cout << "Com catches Player, Com's win" << std::endl;
 			com.set_win(true);
 		}
-
 		// player's attack == false && com's attack == true && player's win status
 		// change player's attack == true && player's attack == false
-		if (com.get_attack() == true && main.statusOfTurn() == 1)
+		else if (com.get_attack() == true && status == 1)
 		{
 			player.set_attack(true);
 			com.set_attack(false);
-			std::cout << "Player's get attacking" << std::endl;
+			std::cout << "Player's get attacking turn" << std::endl;
 		}
-
 		// player's attack == true && com's attack == false && com's win status
 		// change player's attack == false && player's attack == win
-		if (player.get_attack() == true && main.statusOfTurn() == -1)
+		else if (player.get_attack() == true && status == -1)
 		{
 			player.set_attack(false);
 			com.set_attack(true);
-			std::cout << "Com's get attacking" << std::endl;
+			std::cout << "Com's get attacking turn" << std::endl;
 		}
 
-	} while (player.get_win() != true || com.get_win() != true);
+	} while (player.get_win() == false && com.get_win() == false);
 	
 	// asking repeating
 
+	std::cout << "-------------------------------" << std::endl; // seperation line
+	
+	if (player.get_win() == true) {
+		std::cout << "while loop end and player win" << std::endl;
+	}
+	else {
+		std::cout << "while loop end and com win" << std::endl;
+	}
+	
+	std::cout << "-------------------------------" << std::endl; // seperation line
 	std::cout << "END" << std::endl;
 
 	return 0;
