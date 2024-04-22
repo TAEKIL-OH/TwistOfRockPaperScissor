@@ -198,7 +198,7 @@ int main() {
 		}
 		else if (turn == -1) {
 			player.set_attack(false);
-			player.set_attack(true);
+			com.set_attack(true);
 		}
 		else {
 			player.set_attack(false);
@@ -210,6 +210,9 @@ int main() {
 	std::cout << "End of first Decision: " << turn << std::endl;
 	std::cout << "-------------------------------" << std::endl; // seperation line
 	std::cout << "Starting MJP Game: " << turn << std::endl;
+	std::cout << "Player's turn: " << std::boolalpha << player.get_attack() << std::endl;
+	std::cout << "com's turn: " << std::boolalpha << com.get_attack() << std::endl;
+	std::cout << "-------------------------------" << std::endl; // seperation line
 	// after doone decision game
 	// starting main game
 	do {
@@ -221,44 +224,44 @@ int main() {
 
 		int status = main.statusOfTurn();
 
-		// player's attack == true && com's attack == false && player's win status(1)
-		// repeat main game
-		if (player.get_attack() == true && status == 1)
+		if (player.get_attack() == true && com.get_attack() == false && status == 1)
 		{
+			// player's attack == true && com's attack == false && player's win status(1)
+			// repeat main game
 			std::cout << "There is no winner, player attack again" << std::endl;
 		}
-		// player's attack == false && com's attack == true && com's win status(-1)
-		// repeat main game
-		else if (com.get_attack() == true && status == -1)
+		else if (com.get_attack() == true && player.get_attack() == false && status == -1)
 		{
+			// player's attack == false && com's attack == true && com's win status(-1)
+			// repeat main game
 			std::cout << "There is no winner, com attack again" << std::endl;
 		}
-		// player's attack == true && com's attack == false && draw(0)
-		// return player's win
-		else if (player.get_attack() == true && status == 0)
+		else if (player.get_attack() == true && com.get_attack() == false && status == 0)
 		{
+			// player's attack == true && com's attack == false && draw(0)
+			// return player's win
 			std::cout << "Player catches Com, Player's win" << std::endl;
 			player.set_win(true);
 		}
-		// player's attack == false && com's attack == true && draw
-		// return com's win
-		else if (com.get_attack() == true && status == 0)
+		else if (com.get_attack() == true && player.get_attack() == false && status == 0)
 		{
+			// player's attack == false && com's attack == true && draw
+			// return com's win
 			std::cout << "Com catches Player, Com's win" << std::endl;
 			com.set_win(true);
 		}
-		// player's attack == false && com's attack == true && player's win status
-		// change player's attack == true && player's attack == false
-		else if (com.get_attack() == true && status == 1)
+		else if (com.get_attack() == true && player.get_attack() == false && status == 1)
 		{
+			// player's attack == false && com's attack == true && player's win status
+			// change player's attack == true && player's attack == false
 			player.set_attack(true);
 			com.set_attack(false);
 			std::cout << "Player's get attacking turn" << std::endl;
 		}
-		// player's attack == true && com's attack == false && com's win status
-		// change player's attack == false && player's attack == win
-		else if (player.get_attack() == true && status == -1)
+		else if (player.get_attack() == true && com.get_attack() == false && status == -1)
 		{
+			// player's attack == true && com's attack == false && com's win status
+			// change player's attack == false && player's attack == win
 			player.set_attack(false);
 			com.set_attack(true);
 			std::cout << "Com's get attacking turn" << std::endl;
